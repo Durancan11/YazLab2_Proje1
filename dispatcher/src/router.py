@@ -1,11 +1,28 @@
 # dispatcher/src/router.py
 import httpx
+import asyncio
 
-SERVICE_MAP = {
+SERVICES = {
     "auth": "http://auth_service:8001",
     "borrow": "http://borrowing_service:8002",
     "books": "http://book_service:8003"
 }
+
+# Monitor servisinin Docker içindeki adresi
+MONITOR_URL = "http://monitor_service:8000/log"
+
+async def send_to_monitor(service, action, status):
+    """Monitor servisine arka planda log gönderir"""
+    try:
+        async with httpx.AsyncClient() as client:
+            await client.post(MONITOR_URL, json={
+                "service": service.upper(),
+                "action": action,
+                "status": str(status)
+            }, timeout=1.0)
+            print(f"📡 Monitor'e log gönderildi: {service} {action}")
+    except Exception as e:
+        print(f"⚠️ MONITOR HATASI: {e}")
 
 async def forward_request(request, path):
     parts = path.split("/", 1)
@@ -17,12 +34,8 @@ async def forward_request(request, path):
 
     target_url = f"{SERVICES[service_key]}/{sub_path}"
     
-    # 🟢 HATA AYIKLAMA İÇİN LOG EKLEYELİM
-    print(f"DEBUG: {target_url} adresine istek atılıyor...")
-
     async with httpx.AsyncClient() as client:
         try:
-            # ÖNEMLİ: 'host' başlığını silelim ki hedef servis şaşırmasın
             headers = dict(request.headers)
             headers.pop("host", None) 
             
@@ -31,10 +44,15 @@ async def forward_request(request, path):
                 url=target_url,
                 content=await request.body(),
                 headers=headers,
-                timeout=10.0
+                timeout=15.0
             )
+            
+            # 🔥 O 's' harfi silindi ve log görevi temizce eklendi
+            asyncio.create_task(send_to_monitor(service_key, f"{request.method} /{sub_path}", resp.status_code))
+            
             return resp, None
         except Exception as e:
-            # 🔴 TAM HATAYI TERMİNALDE GÖRMEK İÇİN:
-            print(f"BAĞLANTI HATASI: {str(e)}")
+            # Hata durumunda da monitor'e haber verelim
+            asyncio.create_task(send_to_monitor(service_key, f"{request.method} /{sub_path}", "Error"))
+            print(f"❌ Forward Hatası: {e}")
             return None, "Servis şu an ulaşılamıyor"

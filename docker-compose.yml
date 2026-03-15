@@ -33,7 +33,7 @@ services:
     networks:
       - app-network
 
-  # 4. Ünite: Borrowing 
+  # 4. Ünite: Borrowing
   borrowing_service:
     build: ./borrowing_service
     environment:
@@ -43,6 +43,7 @@ services:
     networks:
       - app-network
 
+  # Görsel Şov Ünitesi
   monitor_service:
     build: ./monitor_service
     ports:
@@ -50,19 +51,34 @@ services:
     networks:
       - app-network
 
+  # --- İZOLE NOSQL VERİTABANLARI (KALICI HAFIZA EKLENDİ) ---
   auth_db:
     image: mongo:latest
     networks:
       - app-network
+    volumes:
+      - auth_data:/data/db # Konteyner silinse de kullanıcılar silinmez
+
   book_db:
     image: mongo:latest
     networks:
       - app-network
+    volumes:
+      - book_data:/data/db # Kitap envanteri burada güvende
+
   borrowing_db:
     image: mongo:latest
     networks:
       - app-network
+    volumes:
+      - borrowing_data:/data/db
 
 networks:
   app-network:
     driver: bridge
+
+# --- KALICI VERİ ALANLARI TANIMI ---
+volumes:
+  auth_data:
+  book_data:
+  borrowing_data:
