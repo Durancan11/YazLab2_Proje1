@@ -1,42 +1,64 @@
+version: '3.8'
+
 services:
-  # 1. Ünite: Kapıdaki Bekçi (Dispatcher)
   dispatcher:
     build: ./dispatcher
     ports:
-      - "8080:8080"
+      - "8080:8080"  # <-- Hata muhtemelen burada, tireden önce boşluk olmalı!
     depends_on:
       - auth_service
       - book_service
       - borrowing_service
+    networks:
+      - app-network
 
-  # 2. Ünite: Giriş Servisi (Login)
+  # 2. Ünite: Giriş Servisi (Auth Service)
   auth_service:
     build: ./login-service
     environment:
       - MONGO_URL=mongodb://auth_db:27017
     depends_on:
       - auth_db
+    networks:
+      - app-network
 
-  # 3. Ünite: Kitap İşlemleri
+  # 3. Ünite: Kitap Envanter İşlemleri (Yeni Eklenen)
   book_service:
-    build: ./book-service
+    build: ./book_service
     environment:
       - MONGO_URL=mongodb://book_db:27017
     depends_on:
       - book_db
+    networks:
+      - app-network
 
-  # 4. Ünite: Ödünç Alma (Senin Servisin)
+  # 4. Ünite: Ödünç Alma İşlemleri (Borrowing Service)
   borrowing_service:
     build: ./borrowing_service
     environment:
       - MONGO_URL=mongodb://borrowing_db:27017
     depends_on:
       - borrowing_db
+    networks:
+      - app-network
 
-  # İZOLE NOSQL VERİTABANLARI (Puan deposu burası!)
+  # --- İZOLE NOSQL VERİTABANLARI (İster 3.2 ve 4.2 gereği)  ---
   auth_db:
     image: mongo:latest
+    networks:
+      - app-network
+
   book_db:
     image: mongo:latest
+    networks:
+      - app-network
+
   borrowing_db:
     image: mongo:latest
+    networks:
+      - app-network
+
+# --- AĞ İZOLASYONU TANIMI  ---
+networks:
+  app-network:
+    driver: bridge

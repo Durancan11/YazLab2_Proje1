@@ -1,9 +1,9 @@
 # dispatcher/src/router.py
 import httpx
 
-SERVICES = {
+SERVICE_MAP = {
     "auth": "http://auth_service:8001",
-    "borrow": "http://borrowing_service:8002", # Docker-compose'daki servis adı ve portu
+    "borrow": "http://borrowing_service:8002",
     "books": "http://book_service:8003"
 }
 
