@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from src.models import BookRequest
-from src.database import (
-    get_all_books, get_book, save_book,
-    update_book, delete_book, book_exists
+from src.service import (
+    fetch_all_books, fetch_book,
+    add_book, modify_book, remove_book
 )
 
 app = FastAPI()
@@ -20,14 +20,14 @@ async def health_check():
 # ----------------------------
 @app.get("/books")
 async def list_books():
-    return get_all_books()
+    return fetch_all_books()
 
 # ----------------------------
 # TEK KİTAP GETİR
 # ----------------------------
 @app.get("/books/{isbn}")
 async def get_single_book(isbn: str):
-    book = get_book(isbn)
+    book = fetch_book(isbn)
     if not book:
         return JSONResponse(
             status_code=404,
@@ -39,47 +39,47 @@ async def get_single_book(isbn: str):
 # KİTAP EKLE
 # ----------------------------
 @app.post("/books", status_code=201)
-async def add_book(request: BookRequest):
-    if book_exists(request.isbn):
-        return JSONResponse(
-            status_code=400,
-            content={"detail": "Bu ISBN ile kitap zaten mevcut"}
-        )
-    save_book(
+async def add_single_book(request: BookRequest):
+    success, message = add_book(
         title=request.title,
         author=request.author,
         isbn=request.isbn,
         quantity=request.quantity
     )
-    return {"message": "Kitap başarıyla eklendi"}
+    if not success:
+        return JSONResponse(
+            status_code=400,
+            content={"detail": message}
+        )
+    return {"message": message}
 
 # ----------------------------
 # KİTAP GÜNCELLE
 # ----------------------------
 @app.put("/books/{isbn}")
 async def update_single_book(isbn: str, request: BookRequest):
-    if not book_exists(isbn):
-        return JSONResponse(
-            status_code=404,
-            content={"detail": "Kitap bulunamadı"}
-        )
-    update_book(
+    success, message = modify_book(
         isbn=isbn,
         title=request.title,
         author=request.author,
         quantity=request.quantity
     )
-    return {"message": "Kitap başarıyla güncellendi"}
+    if not success:
+        return JSONResponse(
+            status_code=404,
+            content={"detail": message}
+        )
+    return {"message": message}
 
 # ----------------------------
 # KİTAP SİL
 # ----------------------------
 @app.delete("/books/{isbn}")
 async def delete_single_book(isbn: str):
-    if not book_exists(isbn):
+    success, message = remove_book(isbn)
+    if not success:
         return JSONResponse(
             status_code=404,
-            content={"detail": "Kitap bulunamadı"}
+            content={"detail": message}
         )
-    delete_book(isbn)
-    return {"message": "Kitap başarıyla silindi"}
+    return {"message": message}
