@@ -1,0 +1,42 @@
+services:
+  # 1. Ünite: Kapıdaki Bekçi (Dispatcher)
+  dispatcher:
+    build: ./dispatcher
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth_service
+      - book_service
+      - borrowing_service
+
+  # 2. Ünite: Giriş Servisi (Login)
+  auth_service:
+    build: ./login-service
+    environment:
+      - MONGO_URL=mongodb://auth_db:27017
+    depends_on:
+      - auth_db
+
+  # 3. Ünite: Kitap İşlemleri
+  book_service:
+    build: ./book-service
+    environment:
+      - MONGO_URL=mongodb://book_db:27017
+    depends_on:
+      - book_db
+
+  # 4. Ünite: Ödünç Alma (Senin Servisin)
+  borrowing_service:
+    build: ./borrowing_service
+    environment:
+      - MONGO_URL=mongodb://borrowing_db:27017
+    depends_on:
+      - borrowing_db
+
+  # İZOLE NOSQL VERİTABANLARI (Puan deposu burası!)
+  auth_db:
+    image: mongo:latest
+  book_db:
+    image: mongo:latest
+  borrowing_db:
+    image: mongo:latest

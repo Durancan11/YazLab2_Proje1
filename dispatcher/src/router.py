@@ -1,46 +1,40 @@
-import os
+# dispatcher/src/router.py
 import httpx
-from dotenv import load_dotenv
 
-load_dotenv()
-
-# Hangi URL hangi servise gidecek
-ROUTES = {
-    "books": os.getenv("BOOK_SERVICE_URL", "http://localhost:8002"),
-    "members": os.getenv("MEMBER_SERVICE_URL", "http://localhost:8003"),
-    "borrow": os.getenv("BORROW_SERVICE_URL", "http://localhost:8004"),
-    "auth": os.getenv("LOGIN_SERVICE_URL", "http://localhost:8001"),
+SERVICES = {
+    "auth": "http://auth_service:8001",
+    "borrow": "http://borrowing_service:8002", # Docker-compose'daki servis adı ve portu
+    "books": "http://book_service:8003"
 }
 
-def find_target_url(path: str):
-    """
-    Gelen URL'e bakarak hangi servise gideceğini bulur.
-    Örnek: 'books/1' → BOOK_SERVICE_URL
-    """
-    for route, url in ROUTES.items():
-        if path.startswith(route):
-            return url
-    return None
+async def forward_request(request, path):
+    parts = path.split("/", 1)
+    service_key = parts[0]
+    sub_path = parts[1] if len(parts) > 1 else ""
 
-async def forward_request(request, path: str):
-    """
-    İsteği ilgili servise iletir ve cevabı geri döner.
-    """
-    target_url = find_target_url(path)
-
-    if not target_url:
+    if service_key not in SERVICES:
         return None, "Servis bulunamadı"
 
-    full_url = f"{target_url}/{path}"
+    target_url = f"{SERVICES[service_key]}/{sub_path}"
+    
+    # 🟢 HATA AYIKLAMA İÇİN LOG EKLEYELİM
+    print(f"DEBUG: {target_url} adresine istek atılıyor...")
 
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.request(
+    async with httpx.AsyncClient() as client:
+        try:
+            # ÖNEMLİ: 'host' başlığını silelim ki hedef servis şaşırmasın
+            headers = dict(request.headers)
+            headers.pop("host", None) 
+            
+            resp = await client.request(
                 method=request.method,
-                url=full_url,
-                headers=dict(request.headers),
-                content=await request.body()
+                url=target_url,
+                content=await request.body(),
+                headers=headers,
+                timeout=10.0
             )
-            return response, None
-    except httpx.ConnectError:
-        return None, "Servis şu an ulaşılamıyor"
+            return resp, None
+        except Exception as e:
+            # 🔴 TAM HATAYI TERMİNALDE GÖRMEK İÇİN:
+            print(f"BAĞLANTI HATASI: {str(e)}")
+            return None, "Servis şu an ulaşılamıyor"
