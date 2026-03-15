@@ -2,11 +2,9 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from src.models import RegisterRequest, LoginRequest
 from src.auth import hash_password, check_password, create_token
+from src.database import get_user, save_user, user_exists
 
 app = FastAPI()
-
-# Geçici kullanıcı deposu (MongoDB'ye bağlanana kadar)
-fake_db = {}
 
 # ----------------------------
 # SAĞLIK KONTROLÜ
@@ -20,14 +18,17 @@ async def health_check():
 # ----------------------------
 @app.post("/register", status_code=201)
 async def register(request: RegisterRequest):
-    if request.username in fake_db:
-        return JSONResponse(status_code=400, content={"detail": "Kullanıcı zaten mevcut"})
+    if user_exists(request.username):
+        return JSONResponse(
+            status_code=400,
+            content={"detail": "Kullanıcı zaten mevcut"}
+        )
 
-    fake_db[request.username] = {
-        "username": request.username,
-        "email": request.email,
-        "password": hash_password(request.password)
-    }
+    save_user(
+        username=request.username,
+        email=request.email,
+        hashed_password=hash_password(request.password)
+    )
 
     return {"message": "Kullanıcı başarıyla oluşturuldu"}
 
@@ -36,10 +37,13 @@ async def register(request: RegisterRequest):
 # ----------------------------
 @app.post("/login")
 async def login(request: LoginRequest):
-    user = fake_db.get(request.username)
+    user = get_user(request.username)
 
     if not user or not check_password(request.password, user["password"]):
-        return JSONResponse(status_code=401, content={"detail": "Kullanıcı adı veya şifre hatalı"})
+        return JSONResponse(
+            status_code=401,
+            content={"detail": "Kullanıcı adı veya şifre hatalı"}
+        )
 
     token = create_token(str(request.username), request.username)
     return {"token": token}
