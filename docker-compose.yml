@@ -58,9 +58,12 @@ services:
     build: ./monitor_service
     ports:
       - "8081:8000"
+    environment:
+      - MONGO_URL=mongodb://monitor_db:27017
+    depends_on:
+      - monitor_db
     networks:
       - app-network
-
   # --- İZOLE NOSQL VERİTABANLARI (KALICI HAFIZA EKLENDİ) ---
   auth_db:
     image: mongo:latest
@@ -89,6 +92,13 @@ services:
       - app-network
     volumes:
       - member_data:/data/db
+  
+  monitor_db:
+    image: mongo:latest
+    networks:
+      - app-network
+    volumes:
+      - monitor_data:/data/db
 
 networks:
   app-network:
@@ -100,5 +110,6 @@ volumes:
   book_data:
   borrowing_data:
   member_data:
+  monitor_data:
 
   

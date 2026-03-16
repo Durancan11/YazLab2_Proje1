@@ -1,13 +1,21 @@
-# monitor_service/main.py
+import os
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 from datetime import datetime
-from typing import List
+from motor.motor_asyncio import AsyncIOMotorClient
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
 
-# Logları geçici olarak hafızada tutuyoruz (100 puanlık rapor için yeterli)
+# MongoDB bağlantısı
+MONGO_URL = os.getenv("MONGO_URL", "mongodb://localhost:27017")
+client = AsyncIOMotorClient(MONGO_URL)
+db = client.get_database("monitor_system")
+
+# Hafızada da tutuyoruz (hızlı erişim için)
 LOG_STORAGE = []
 
 class LogEntry(BaseModel):
@@ -15,7 +23,6 @@ class LogEntry(BaseModel):
     action: str
     status: str
 
-# 📡 Dispatcher'dan gelen logları kabul eden kapı
 @app.post("/log")
 async def receive_log(entry: LogEntry):
     log_data = {
@@ -24,15 +31,25 @@ async def receive_log(entry: LogEntry):
         "islem": entry.action,
         "durum": entry.status
     }
-    LOG_STORAGE.insert(0, log_data) # En yeni logu en üste ekle
-    if len(LOG_STORAGE) > 20: # Panel şişmesin diye son 20 logu tutalım
+    # Hem hafızaya hem MongoDB'ye kaydet
+    LOG_STORAGE.insert(0, log_data)
+    if len(LOG_STORAGE) > 20:
         LOG_STORAGE.pop()
+    
+    # MongoDB'ye kalıcı olarak kaydet
+    await db.logs.insert_one(log_data.copy())
+    
     return {"status": "success"}
 
-# 📝 Logları JSON olarak veren kapı (Frontend burayı sorgulayacak)
 @app.get("/api/logs")
 async def get_logs():
-    return LOG_STORAGE
+    # Önce MongoDB'den son 20 logu çek
+    logs = []
+    cursor = db.logs.find({}).sort("_id", -1).limit(20)
+    async for log in cursor:
+        log.pop("_id", None)
+        logs.append(log)
+    return logs
 
 @app.get("/", response_class=HTMLResponse)
 async def dashboard():
@@ -41,7 +58,6 @@ async def dashboard():
         <head>
             <title>KOU YazLab - Sistem Monitörü</title>
             <script>
-                // 🔄 Her 2 saniyede bir Karargah'tan (API) veri çeken fonksiyon
                 async function updateLogs() {
                     const response = await fetch('/api/logs');
                     const logs = await response.json();
@@ -56,7 +72,8 @@ async def dashboard():
                         </tr>
                     `).join('');
                 }
-                setInterval(updateLogs, 2000); // 2 saniye kuralı
+                setInterval(updateLogs, 2000);
+                updateLogs();
             </script>
         </head>
         <body style="font-family: 'Segoe UI', sans-serif; background-color: #121212; color: #e0e0e0; padding: 40px; text-align: center;">
@@ -67,6 +84,7 @@ async def dashboard():
                 <p>🟢 Auth Service: <b>ONLINE</b></p>
                 <p>🟢 Borrowing Service: <b>ONLINE</b></p>
                 <p>🟢 Book Service: <b>ONLINE</b></p>
+                <p>🟢 Member Service: <b>ONLINE</b></p>
             </div>
             <h3>📝 Son İstek Kayıtları (Logs)</h3>
             <table style="width: 80%; margin: auto; border-collapse: collapse; background: #1e1e1e; border-radius: 8px; overflow: hidden;">
