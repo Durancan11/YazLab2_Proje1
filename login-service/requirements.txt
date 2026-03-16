@@ -3,4 +3,4 @@ uvicorn
 motor
 PyJWT
 python-dotenv
-passlib[bcrypt]
+bcrypt
