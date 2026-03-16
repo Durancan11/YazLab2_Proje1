@@ -42,7 +42,16 @@ services:
       - borrowing_db
     networks:
       - app-network
-
+  
+  member_service:
+    build: ./member_service
+    environment:
+      - MONGO_URL=mongodb://member_db:27017
+    depends_on:
+      - member_db
+    networks:
+      - app-network
+  
   # Görsel Şov Ünitesi
   monitor_service:
     build: ./monitor_service
@@ -72,6 +81,13 @@ services:
       - app-network
     volumes:
       - borrowing_data:/data/db
+  
+  member_db:
+    image: mongo:latest
+    networks:
+      - app-network
+    volumes:
+      - member_data:/data/db
 
 networks:
   app-network:
@@ -82,3 +98,6 @@ volumes:
   auth_data:
   book_data:
   borrowing_data:
+  member_data:
+
+  

@@ -5,7 +5,8 @@ import asyncio
 SERVICES = {
     "auth": "http://auth_service:8001",
     "borrow": "http://borrowing_service:8002",
-    "books": "http://book_service:8003"
+    "books": "http://book_service:8003",
+    "members": "http://member_service:8004"
 }
 
 # Monitor servisinin Docker içindeki adresi
