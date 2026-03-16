@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from src.models import RegisterRequest, LoginRequest
@@ -18,13 +19,13 @@ async def health_check():
 # ----------------------------
 @app.post("/register", status_code=201)
 async def register(request: RegisterRequest):
-    if user_exists(request.username):
+    if await user_exists(request.username):
         return JSONResponse(
             status_code=400,
             content={"detail": "Kullanıcı zaten mevcut"}
         )
 
-    save_user(
+    await save_user(
         username=request.username,
         email=request.email,
         hashed_password=hash_password(request.password)
@@ -37,7 +38,7 @@ async def register(request: RegisterRequest):
 # ----------------------------
 @app.post("/login")
 async def login(request: LoginRequest):
-    user = get_user(request.username)
+    user = await get_user(request.username)
 
     if not user or not check_password(request.password, user["password"]):
         return JSONResponse(
