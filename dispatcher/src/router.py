@@ -4,7 +4,7 @@ import asyncio
 
 SERVICES = {
     "auth": "http://auth_service:8001",
-    "borrow": "http://borrowing_service:8002",
+    "borrow": "http://borrowing_service:8002/borrow",
     "books": "http://book_service:8003/books"
 }
 
