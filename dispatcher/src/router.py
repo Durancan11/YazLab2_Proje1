@@ -5,7 +5,7 @@ import asyncio
 SERVICES = {
     "auth": "http://auth_service:8001",
     "borrow": "http://borrowing_service:8002",
-    "books": "http://book_service:8003"
+    "books": "http://book_service:8003/books"
 }
 
 # Monitor servisinin Docker içindeki adresi
@@ -32,13 +32,14 @@ async def forward_request(request, path):
     if service_key not in SERVICES:
         return None, "Servis bulunamadı"
 
-    target_url = f"{SERVICES[service_key]}/{sub_path}"
+    full_path = sub_path.rstrip("/")
+    target_url = f"{SERVICES[service_key]}/{full_path}".rstrip("/")
     
     async with httpx.AsyncClient() as client:
         try:
             headers = dict(request.headers)
-            headers.pop("host", None) 
-            
+            headers.pop("host", None)
+
             resp = await client.request(
                 method=request.method,
                 url=target_url,
@@ -46,13 +47,11 @@ async def forward_request(request, path):
                 headers=headers,
                 timeout=15.0
             )
-            
-            # 🔥 O 's' harfi silindi ve log görevi temizce eklendi
+
             asyncio.create_task(send_to_monitor(service_key, f"{request.method} /{sub_path}", resp.status_code))
-            
+
             return resp, None
         except Exception as e:
-            # Hata durumunda da monitor'e haber verelim
             asyncio.create_task(send_to_monitor(service_key, f"{request.method} /{sub_path}", "Error"))
             print(f"❌ Forward Hatası: {e}")
             return None, "Servis şu an ulaşılamıyor"
