@@ -1,8 +1,9 @@
 Geliştiriciler: 
 Duran Can Demirezen 211307037
 Ömer Şerif Yapıcıoğlu 211307062
+
 📚 YazLab 2 - Mikroservis Tabanlı Kütüphane Yönetim Sistemi
-Bu proje, Kocaeli Üniversitesi Bilgisayar Mühendisliği Yazılım Laboratuvarı II kapsamında geliştirilmiş; yüksek erişilebilirlik, güvenlik ve izlenebilirlik odaklı bir mikroservis mimarisidir.
+Bu proje, Kocaeli Üniversitesi Bilişim Sistemleri Mühendisliği Yazılım Geliştirme Laboratuvarı II kapsamında geliştirilmiş; yüksek erişilebilirlik, güvenlik ve izlenebilirlik odaklı bir mikroservis mimarisidir.
 
 🏗️ Sistem Mimarisi
 Sistem, birbirleriyle izole ağlar üzerinden haberleşen 5 ana servis ve 3 NoSQL veritabanından oluşmaktadır:
