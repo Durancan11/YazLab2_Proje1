@@ -64,20 +64,20 @@ services:
       - monitor_db
     networks:
       - app-network
-  # --- İZOLE NOSQL VERİTABANLARI (KALICI HAFIZA EKLENDİ) ---
+  # --- İZOLE NOSQL VERİTABANLARI ---
   auth_db:
     image: mongo:latest
     networks:
       - app-network
     volumes:
-      - auth_data:/data/db # Konteyner silinse de kullanıcılar silinmez
+      - auth_data:/data/db 
 
   book_db:
     image: mongo:latest
     networks:
       - app-network
     volumes:
-      - book_data:/data/db # Kitap envanteri burada güvende
+      - book_data:/data/db 
 
   borrowing_db:
     image: mongo:latest
