@@ -14,7 +14,13 @@ async def dispatcher(request: Request, path: str):
         if error: return JSONResponse(status_code=502, content={"detail": error})
         return JSONResponse(status_code=response.status_code, content=response.json())
 
-    # 2. TOKEN DOĞRULAMA (İşte burayı düzelttik!)
+    # --- YENİ: TDD İÇİN SAĞLIK KONTROLÜ (EXCLUDED PATH) ---
+    # Bu rota token istemez, doğrudan 200 OK döner.
+    if path == "health":
+        return JSONResponse(status_code=200, content={"status": "ok"})
+    # ----------------------------------------------------
+
+    # 2. TOKEN DOĞRULAMA (Artık /health buraya takılmayacak!)
     payload, error = verify_token(request)
     if error:
         # 🔥 TOKEN YOKSA BİLE MONİTÖRE HABER VER!
