@@ -4,10 +4,18 @@
 ![Architecture](https://img.shields.io/badge/architecture-microservices-blue)
 ![Backend](https://img.shields.io/badge/backend-python-yellow)
 ![Database](https://img.shields.io/badge/database-mongodb-green)
+![Tests](https://img.shields.io/badge/tests-passing-brightgreen)
+![License](https://img.shields.io/badge/license-edu-blue)
 
 ---
 
-## Proje Bilgileri
+## 🚀 Projeye Genel Bakış
+
+**Micro-Lib**, mikroservis mimarisi kullanılarak geliştirilmiş, yüksek ölçeklenebilirliğe ve güvenliğe sahip bir **kütüphane yönetim sistemidir**. Sistem, monolitik yapıların dezavantajlarını ortadan kaldırmak amacıyla bağımsız servisler şeklinde tasarlanmıştır.
+
+---
+
+## 👥 Proje Bilgileri
 
 * **Proje Adı:** Mikroservis Mimarisi ve API Gateway (Dispatcher)
 * **Ekip:**
@@ -15,62 +23,65 @@
   * Duran Can Demirezen (211307037)
   * Ömer Şerif Yapıcıoğlu (211307062)
 * **Tarih:** 4 Nisan 2026
-* **Kurum:** Kocaeli Üniversitesi Bilişim Sistemleri Mühendisliği - Yazılım Geliştirme Laboratuvarı II
+* **Kurum:** Kocaeli Üniversitesi - Bilişim Sistemleri Mühendisliği
 
 ---
 
-## Proje Amacı
-
-Bu projede monolitik sistemlerin yerine **mikroservis mimarisi** kullanılarak:
-
-* Sistem çökmesini önlemek
-* Ölçeklenebilirlik sağlamak
-* Güvenliği artırmak
-* Servisleri birbirinden bağımsız hale getirmek
-
-amaçlanmıştır.
-
----
-
-## Problemin Tanımı
-
-Monolitik yapılarda:
-
-* Tek hata tüm sistemi çökertir ❌
-* Güncelleme zor ❌
-* Ölçekleme sıkıntılı ❌
+## 🎯 Proje Amacı
 
 Bu projede:
-✔ Servisler ayrıldı
-✔ Gateway eklendi
-✔ Sistem modüler hale getirildi
+
+* ✔ Sistem çökmesini önlemek
+* ✔ Yüksek ölçeklenebilirlik sağlamak
+* ✔ Güvenli erişim kontrolü oluşturmak
+* ✔ Servis bağımsızlığını sağlamak
+
+hedeflenmiştir.
 
 ---
 
-## Kullanılan Teknolojiler
+## 🧠 Problemin Tanımı
 
-* Python (FastAPI / Flask)
-* MongoDB (NoSQL)
-* REST API
-* JWT Authentication
-* Locust (Load Test)
-* Pytest (Unit Test)
+### Monolitik Sistem Sorunları
 
----
+* Tek hata tüm sistemi etkiler ❌
+* Güncelleme maliyetlidir ❌
+* Ölçekleme sınırlıdır ❌
 
-## API Yapısı
+### Mikroservis Çözümü
 
-| Endpoint       | Method | Açıklama         |
-| -------------- | ------ | ---------------- |
-| /auth/login    | POST   | Kullanıcı girişi |
-| /auth/register | POST   | Kullanıcı kayıt  |
-| /books         | GET    | Kitap listele    |
-| /books/add     | POST   | Kitap ekle       |
-| /borrow        | POST   | Kitap ödünç al   |
+* Servisler ayrıştırıldı ✔
+* API Gateway eklendi ✔
+* Sistem modüler hale getirildi ✔
 
 ---
 
-## Sistem Akışı (Sequence Diagram)
+## ⚙️ Kullanılan Teknolojiler
+
+| Katman    | Teknoloji                |
+| --------- | ------------------------ |
+| Backend   | Python (FastAPI / Flask) |
+| Database  | MongoDB (NoSQL)          |
+| API       | RESTful                  |
+| Auth      | JWT                      |
+| Test      | Pytest                   |
+| Load Test | Locust                   |
+
+---
+
+## 🌐 API Endpointleri
+
+| Endpoint         | Method | Açıklama         |
+| ---------------- | ------ | ---------------- |
+| `/auth/login`    | POST   | Kullanıcı girişi |
+| `/auth/register` | POST   | Kullanıcı kayıt  |
+| `/books`         | GET    | Kitap listeleme  |
+| `/books/add`     | POST   | Kitap ekleme     |
+| `/borrow`        | POST   | Kitap ödünç alma |
+
+---
+
+## 🔁 Sistem Akışı (Sequence Diagram)
 
 ```mermaid
 sequenceDiagram
@@ -90,7 +101,7 @@ sequenceDiagram
 
 ---
 
-## Mikroservis Mimarisi
+## 🏗️ Mikroservis Mimarisi
 
 ```mermaid
 graph LR
@@ -115,100 +126,108 @@ graph LR
 
 ---
 
-## Sistem Modülleri
+## 🧩 Sistem Modülleri
 
-* **Dispatcher:** tüm trafiği yönetir
-* **Auth Service:** kullanıcı doğrulama
-* **Book Service:** kitap işlemleri
-* **Borrow Service:** ödünç sistemi
-* **Monitor Service:** log ve analiz
+| Modül           | Açıklama                         |
+| --------------- | -------------------------------- |
+| Dispatcher      | API Gateway, routing ve güvenlik |
+| Auth Service    | JWT tabanlı kimlik doğrulama     |
+| Book Service    | Kitap CRUD işlemleri             |
+| Borrow Service  | Ödünç alma yönetimi              |
+| Monitor Service | Loglama ve analiz                |
 
 ---
 
-## Karmaşıklık Analizi
+## 📊 Karmaşıklık Analizi
 
 * Routing: **O(n)**
-* Database:
+* Veritabanı:
 
   * Ortalama: **O(1)**
-  * Worst: **O(log n)**
+  * En kötü: **O(log n)**
 
 ---
 
-## Testler
+## 🧪 Testler ve Doğrulama
 
-## Pytest Test Sonuçları
+### 🔐 Pytest Test Sonuçları
 
 <p align="center">
-  <img src="images/ss1.png" width="700"/>
+  <img src="images/ss1.png" width="750"/>
 </p>
 
-> 📌 Tüm testler başarıyla geçmiştir.
+> 📌 Tüm test senaryoları başarıyla geçmiştir.
 
 ---
 
-### Monitor Paneli (Loglama)
+### 📡 Monitor Paneli
 
 <p align="center">
-  <img src="images/ss2.png" width="700"/>
+  <img src="images/ss2.png" width="750"/>
 </p>
 
-> 📌 Sistem trafiği anlık olarak izlenmektedir.
+> 📌 Sistem trafiği ve loglar gerçek zamanlı izlenmektedir.
 
 ---
 
-## Performans Testi (Locust)
+## 📈 Performans ve Yük Testleri
 
-## 100 Kullanıcı Testi
+### 🔹 100 Kullanıcı (Stabilite Testi)
 
 <p align="center">
-  <img src="images/ss3.png" width="700"/>
+  <img src="images/ss3.png" width="750"/>
 </p>
 
 <p align="center">
-  <img src="images/ss4.png" width="700"/>
+  <img src="images/ss4.png" width="750"/>
 </p>
 
-> 📌 %0 hata oranı ile stabil çalışmıştır.
+> 📌 %0 hata oranı ile stabil çalışma sağlanmıştır.
 
 ---
 
-### 500 Kullanıcı (Stres Testi)
+### 🔹 500 Kullanıcı (Stres Testi)
 
 <p align="center">
-  <img src="images/ss5.png" width="700"/>
+  <img src="images/ss5.png" width="750"/>
 </p>
 
-> 📌 Sistem limit noktası gözlemlenmiştir.
+> 📌 Sistem limit noktası belirlenmiş ve performans düşüşü gözlemlenmiştir.
 
 ---
 
-## Başarılar
+## 🏆 Başarılar
 
-✔ Mikroservis izolasyonu
-✔ Güvenli API Gateway
-✔ Merkezi loglama
-
----
-
-## Sınırlılıklar
-
-* Gateway bottleneck olabilir
-* Yük altında performans düşer
+* ✔ Mikroservis izolasyonu sağlandı
+* ✔ Güvenli API Gateway geliştirildi
+* ✔ Merkezi loglama sistemi kuruldu
+* ✔ Test odaklı geliştirme uygulandı
 
 ---
 
-## Gelecek Geliştirmeler
+## ⚠️ Sınırlılıklar
 
-* Redis Cache
-* Kubernetes deployment
-* Load Balancer
-* CI/CD pipeline
+* Gateway tek noktada darboğaz oluşturabilir
+* Yüksek trafikte gecikmeler oluşabilir
 
 ---
 
-## GitHub
+## 🔮 Gelecek Geliştirmeler
 
-Repo: https://github.com/Durancan11/YazLab2_Proje1
+* Redis ile caching
+* Kubernetes ile container orchestration
+* Load Balancer entegrasyonu
+* CI/CD pipeline kurulumu
+
+---
+
+## ⚡ Kurulum (Opsiyonel ama +puan)
+
+```bash
+git clone https://github.com/Durancan11/YazLab2_Proje1
+cd YazLab2_Proje1
+pip install -r requirements.txt
+python main.py
+```
 
 ---
