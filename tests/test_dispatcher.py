@@ -5,7 +5,6 @@ from dispatcher.main import app
 @pytest.mark.asyncio
 async def test_health_check():
     """TDD - Red: Sağlık kontrolü çalışıyor mu?"""
-    # Modern HTTPX kullanımı: app artık transport içinde tanımlanır
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         response = await ac.get("/health")
