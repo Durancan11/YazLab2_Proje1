@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from src.auth import verify_token
-from src.router import forward_request, send_to_monitor # 📡 Habercimizi çağırdık
+from src.router import forward_request, send_to_monitor
 import asyncio
 
 app = FastAPI()
@@ -23,7 +23,7 @@ async def dispatcher(request: Request, path: str):
     # 2. TOKEN DOĞRULAMA (Artık /health buraya takılmayacak!)
     payload, error = verify_token(request)
     if error:
-        # 🔥 TOKEN YOKSA BİLE MONİTÖRE HABER VER!
+        #  TOKEN YOKSA BİLE MONİTÖRE HABER VER
         service_name = path.split("/")[0] if "/" in path else "system"
         asyncio.create_task(send_to_monitor(service_name, f"{request.method} /{path}", "401-Unauthorized"))
         return JSONResponse(status_code=401, content={"detail": error})

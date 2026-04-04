@@ -43,7 +43,7 @@ services:
     networks:
       - app-network
 
-  # Görsel Şov Ünitesi
+  # Görsel
   monitor_service:
     build: ./monitor_service
     ports:
@@ -51,7 +51,7 @@ services:
     networks:
       - app-network
 
-  # --- İZOLE NOSQL VERİTABANLARI (KALICI HAFIZA EKLENDİ) ---
+  # --- İZOLE NOSQL VERİTABANLARI ---
   auth_db:
     image: mongo:latest
     networks:
@@ -64,7 +64,7 @@ services:
     networks:
       - app-network
     volumes:
-      - book_data:/data/db # Kitap envanteri burada güvende
+      - book_data:/data/db
 
   borrowing_db:
     image: mongo:latest

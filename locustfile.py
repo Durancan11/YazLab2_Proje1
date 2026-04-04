@@ -6,7 +6,7 @@ class YazLabUser(HttpUser):
 
     def on_start(self):
         """Her bot önce kayıt olur ve giriş yapıp token alır"""
-        # Önce kayıt (Eğer varsa hata verir ama sorun değil)
+        # Önce kayıt Eğer varsa hata verir
         self.client.post("/auth/register", json={
             "username": "bot_user", "password": "123", "email": "bot@test.com"
         })

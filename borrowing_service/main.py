@@ -6,7 +6,7 @@ from pydantic import BaseModel
 app = FastAPI()
 
 # ----------------------------
-# VERİTABANI BAĞLANTISI (Kritik Kısım!)
+# VERİTABANI BAĞLANTISI
 # ----------------------------
 MONGO_URL = os.getenv("MONGO_URL", "mongodb://borrowing_db:27017")
 client = AsyncIOMotorClient(MONGO_URL)

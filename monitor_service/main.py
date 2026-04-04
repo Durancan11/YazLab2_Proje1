@@ -7,7 +7,7 @@ from typing import List
 
 app = FastAPI()
 
-# Logları geçici olarak hafızada tutuyoruz (100 puanlık rapor için yeterli)
+# Logları geçici olarak hafızada tutuyoruz
 LOG_STORAGE = []
 
 class LogEntry(BaseModel):
@@ -15,7 +15,7 @@ class LogEntry(BaseModel):
     action: str
     status: str
 
-# 📡 Dispatcher'dan gelen logları kabul eden kapı
+# Dispatcher'dan gelen logları kabul eden kapı
 @app.post("/log")
 async def receive_log(entry: LogEntry):
     log_data = {
@@ -24,12 +24,12 @@ async def receive_log(entry: LogEntry):
         "islem": entry.action,
         "durum": entry.status
     }
-    LOG_STORAGE.insert(0, log_data) # En yeni logu en üste ekle
-    if len(LOG_STORAGE) > 20: # Panel şişmesin diye son 20 logu tutalım
+    LOG_STORAGE.insert(0, log_data)
+    if len(LOG_STORAGE) > 20:
         LOG_STORAGE.pop()
     return {"status": "success"}
 
-# 📝 Logları JSON olarak veren kapı (Frontend burayı sorgulayacak)
+# Logları JSON olarak veren kapı (Frontend burayı sorgulayacak)
 @app.get("/api/logs")
 async def get_logs():
     return LOG_STORAGE
@@ -41,7 +41,7 @@ async def dashboard():
         <head>
             <title>KOU YazLab - Sistem Monitörü</title>
             <script>
-                // 🔄 Her 2 saniyede bir Karargah'tan (API) veri çeken fonksiyon
+                // Her 2 saniyede bir Karargah'tan (API) veri çeken fonksiyon
                 async function updateLogs() {
                     const response = await fetch('/api/logs');
                     const logs = await response.json();

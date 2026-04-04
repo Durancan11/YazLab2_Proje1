@@ -58,6 +58,6 @@ async def test_request_with_valid_token():
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         response = await ac.get("/books", headers=headers)
     
-    # 401 veya 403 dönmemeli (servis kapalı olduğu için 502 olabilir, bu normal)
+    # 401 veya 403 dönmemeli (servis kapalı olduğu için 502 olabilir)
     assert response.status_code != 401
     assert response.status_code != 403
