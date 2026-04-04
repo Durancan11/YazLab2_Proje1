@@ -1,68 +1,47 @@
-Geliştiriciler: 
-Duran Can Demirezen 211307037
-Ömer Şerif Yapıcıoğlu 211307062
+📚 Micro-Lib: Dağıtık Mikroservis Tabanlı Kütüphane Yönetim Sistemi
 
-📚 YazLab 2 - Mikroservis Tabanlı Kütüphane Yönetim Sistemi
-Bu proje, Kocaeli Üniversitesi Bilişim Sistemleri Mühendisliği Yazılım Geliştirme Laboratuvarı II kapsamında geliştirilmiş; yüksek erişilebilirlik, güvenlik ve izlenebilirlik odaklı bir mikroservis mimarisidir.
+1. Proje Bilgileri
+Proje Adı: Mikroservis Mimarisi ve API Gateway (Dispatcher) Uygulaması
+Ekip Üyeleri:
+Duran Can Demirezen (211307037)
+Ömer Şerif Yapıcıoğlu (211307062)
+Tarih: 4 Nisan 2026
+Kurum: Kocaeli Üniversitesi - Bilişim Sistemleri Mühendisliği (Yazılım Geliştirme Laboratuvarı II - Proje I)
 
-🏗️ Sistem Mimarisi
-Sistem, birbirleriyle izole ağlar üzerinden haberleşen 5 ana servis ve 3 NoSQL veritabanından oluşmaktadır:
+2. Giriş
+Problemin Tanımı
 
-Dispatcher (API Gateway): Sistemin giriş kapısıdır. Tüm istekleri karşılar, JWT (JSON Web Token) doğrulaması yapar ve istekleri ilgili servislere yönlendirir.
+Geleneksel monolitik mimarilerde tüm sistem tek bir yapı altında çalıştığı için, herhangi bir modülde oluşan hata tüm sistemi etkileyebilmektedir. Ayrıca bu mimarilerde ölçeklendirme ve bakım süreçleri oldukça zordur.
 
-Auth Service: Kullanıcı kayıt (Register) ve giriş (Login) işlemlerini yönetir, güvenli token üretir.
+Bu projede kütüphane yönetim sistemi; kitap işlemleri, kullanıcı yönetimi ve ödünç alma gibi temel fonksiyonlar birbirinden bağımsız mikroservisler halinde tasarlanmıştır. Böylece sistemde oluşabilecek hataların yayılması engellenmiş ve "Single Point of Failure" riski azaltılmıştır.
 
-Book Service: Kitap envanterini ve CRUD işlemlerini yönetir.
+Amaç
+Merkezi kontrol: Dispatcher (API Gateway) ile tüm istekleri tek noktadan yönetmek
+Güvenlik: Mikroservisleri dış dünyadan izole ederek sadece gateway üzerinden erişim sağlamak
+Veri izolasyonu: Her mikroservisin kendi bağımsız NoSQL (MongoDB) veritabanına sahip olması
 
-Borrowing Service: Kitap ödünç alma ve iade süreçlerini takip eder.
+3. Tasarım ve Teknik Altyapı
 
-Monitor Service (Dashboard): Sistemdeki tüm trafiği (başarılı/başarısız) gerçek zamanlı olarak izleyen merkezi log merkezidir.
+RESTful Servisler
 
-🛠️ Kullanılan Teknolojiler
-Backend: Python 3.14, FastAPI (Asenkron mimari)
+REST (Representational State Transfer), istemci-sunucu iletişimini standart HTTP metotları üzerinden gerçekleştiren bir mimari yaklaşımdır.
 
-Konteynerizasyon: Docker & Docker Compose
+Bu projede kullanılan HTTP metotları:
 
-Veritabanı: MongoDB (Her servis için izole veritabanı)
+GET → veri alma
+POST → veri ekleme
+PUT → veri güncelleme
+DELETE → veri silme
+Richardson Olgunluk Modeli (RMM)
 
-Test & Analiz: Locust (Yük ve Stres Testi)
+Sistem, Richardson Olgunluk Modeli’ne göre Level 2 seviyesinde tasarlanmıştır:
 
-Haberleşme: HTTP/REST & Asenkron Loglama
+Level 0-1: Kaynaklar URL ile ayrılmıştır
+/books, /auth, /borrow
+Level 2: HTTP metotları ve durum kodları aktif kullanılmıştır
+200 OK
+401 Unauthorized
+502 Bad Gateway
 
-🚀 Sistemi Çalıştırma
-Tüm sistemi tek bir komutla ayağa kaldırabilirsiniz:
-
-Bash
-docker-compose up --build -d
-API Gateway: http://localhost:8080
-
-İzleme Paneli (Dashboard): http://localhost:8081
-
-Locust Test Arayüzü: http://localhost:8089
-
-🔒 Güvenlik ve Doğrulama (JWT)
-Sistem "Zero Trust" prensibiyle çalışır. auth/ dışındaki tüm servislere erişim için geçerli bir Bearer Token zorunludur.
-
-POST /auth/register ile kayıt olunur.
-
-POST /auth/login ile giriş yapılıp access_token alınır.
-
-İsteklerin Authorization başlığına Bearer <token> eklenerek servislere erişilir.
-
-📊 İzlenebilirlik (Monitoring)
-Geliştirilen Monitor Service, sistemdeki tüm mikroservislerden gelen sinyalleri yakalar.
-
-401 Unauthorized: Yetkisiz erişim denemeleri anında loglanır.
-
-200 OK: Başarılı işlemler yeşil statüyle takip edilir.
-
-422 Unprocessable Entity: Hatalı veri girişleri (Validation) izlenebilir.
-
-💣 Performans ve Stres Testi (Locust)
-Sistem, 100 eşzamanlı kullanıcı ve saniyede 10 yeni kullanıcı artış hızıyla test edilmiştir.
-
-Ortalama RPS: ~55-60
-
-Başarı Oranı: %100 (Doğru token ile yapılan isteklerde)
-
-Güvenlik Testi: Tokensız yapılan binlerce istek, Dispatcher tarafından başarıyla bloklanmış ve izleme panelinde raporlanmıştır.
+Sistem Akışı (Sequence Diagram)	
+![Mermaid Diyagramı](images/mermaid_20260404_455ec1.png)
