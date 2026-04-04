@@ -43,7 +43,7 @@ Level 2: HTTP metotları ve durum kodları aktif kullanılmıştır
 401 Unauthorized
 502 Bad Gateway
 
-Sistem Akışı (Sequence Diagram)
+### Sistem Akışı (Sequence Diagram)
 
 ```mermaid
 sequenceDiagram
@@ -72,6 +72,7 @@ Dispatcher yönlendirme: O(n)
 Veritabanı sorguları:
 Ortalama: O(1)
 En kötü: O(log n)
+
 4. Sistem Modülleri
 Mikroservis Mimarisi
 
