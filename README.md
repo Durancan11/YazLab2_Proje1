@@ -8,6 +8,16 @@
 ![License](https://img.shields.io/badge/license-edu-blue)
 
 ---
+## Kurulum
+
+```bash
+git clone https://github.com/Durancan11/YazLab2_Proje1
+cd YazLab2_Proje1
+pip install -r requirements.txt
+python main.py
+```
+
+---
 
 ## 🚀 Projeye Genel Bakış
 
@@ -15,7 +25,7 @@
 
 ---
 
-## 👥 Proje Bilgileri
+## Proje Bilgileri
 
 * **Proje Adı:** Mikroservis Mimarisi ve API Gateway (Dispatcher)
 * **Ekip:**
@@ -23,11 +33,11 @@
   * Duran Can Demirezen (211307037)
   * Ömer Şerif Yapıcıoğlu (211307062)
 * **Tarih:** 4 Nisan 2026
-* **Kurum:** Kocaeli Üniversitesi - Bilişim Sistemleri Mühendisliği
+* **Kurum:** Kocaeli Üniversitesi - Bilişim Sistemleri Mühendisliği - Yazılım Geliştirme Laboratuvarı II Proje I
 
 ---
 
-## 🎯 Proje Amacı
+## Proje Amacı
 
 Bu projede:
 
@@ -40,7 +50,7 @@ hedeflenmiştir.
 
 ---
 
-## 🧠 Problemin Tanımı
+## Problemin Tanımı
 
 ### Monolitik Sistem Sorunları
 
@@ -56,7 +66,7 @@ hedeflenmiştir.
 
 ---
 
-## ⚙️ Kullanılan Teknolojiler
+## Kullanılan Teknolojiler
 
 | Katman    | Teknoloji                |
 | --------- | ------------------------ |
@@ -69,7 +79,7 @@ hedeflenmiştir.
 
 ---
 
-## 🌐 API Endpointleri
+## API Endpointleri
 
 | Endpoint         | Method | Açıklama         |
 | ---------------- | ------ | ---------------- |
@@ -81,7 +91,7 @@ hedeflenmiştir.
 
 ---
 
-## 🔁 Sistem Akışı (Sequence Diagram)
+## Sistem Akışı (Sequence Diagram)
 
 ```mermaid
 sequenceDiagram
@@ -101,7 +111,7 @@ sequenceDiagram
 
 ---
 
-## 🏗️ Mikroservis Mimarisi
+##  Mikroservis Mimarisi
 
 ```mermaid
 graph LR
@@ -126,7 +136,7 @@ graph LR
 
 ---
 
-## 🧩 Sistem Modülleri
+##  Sistem Modülleri
 
 | Modül           | Açıklama                         |
 | --------------- | -------------------------------- |
@@ -138,7 +148,7 @@ graph LR
 
 ---
 
-## 📊 Karmaşıklık Analizi
+##  Karmaşıklık Analizi
 
 * Routing: **O(n)**
 * Veritabanı:
@@ -148,9 +158,9 @@ graph LR
 
 ---
 
-## 🧪 Testler ve Doğrulama
+##  Testler ve Doğrulama
 
-### 🔐 Pytest Test Sonuçları
+## Pytest Test Sonuçları
 
 <p align="center">
   <img src="images/ss1.png" width="750"/>
@@ -160,7 +170,7 @@ graph LR
 
 ---
 
-### 📡 Monitor Paneli
+### Monitor Paneli
 
 <p align="center">
   <img src="images/ss2.png" width="750"/>
@@ -170,9 +180,9 @@ graph LR
 
 ---
 
-## 📈 Performans ve Yük Testleri
+## Performans ve Yük Testleri
 
-### 🔹 100 Kullanıcı (Stabilite Testi)
+### 100 Kullanıcı (Stabilite Testi)
 
 <p align="center">
   <img src="images/ss3.png" width="750"/>
@@ -196,7 +206,7 @@ graph LR
 
 ---
 
-## 🏆 Başarılar
+## Başarılar
 
 * ✔ Mikroservis izolasyonu sağlandı
 * ✔ Güvenli API Gateway geliştirildi
@@ -205,14 +215,14 @@ graph LR
 
 ---
 
-## ⚠️ Sınırlılıklar
+## Sınırlılıklar
 
 * Gateway tek noktada darboğaz oluşturabilir
 * Yüksek trafikte gecikmeler oluşabilir
 
 ---
 
-## 🔮 Gelecek Geliştirmeler
+## Gelecek Geliştirmeler
 
 * Redis ile caching
 * Kubernetes ile container orchestration
@@ -221,13 +231,3 @@ graph LR
 
 ---
 
-## ⚡ Kurulum (Opsiyonel ama +puan)
-
-```bash
-git clone https://github.com/Durancan11/YazLab2_Proje1
-cd YazLab2_Proje1
-pip install -r requirements.txt
-python main.py
-```
-
----
