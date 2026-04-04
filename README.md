@@ -43,5 +43,20 @@ Level 2: HTTP metotları ve durum kodları aktif kullanılmıştır
 401 Unauthorized
 502 Bad Gateway
 
-Sistem Akışı (Sequence Diagram)	
-![Mermaid Diyagramı](images/mermaid_20260404_455ec1.png)
+Sistem Akışı (Sequence Diagram)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as Kullanıcı
+    participant D as Dispatcher (Gateway)
+    participant A as Auth Service (NoSQL)
+    participant B as Book Service (NoSQL)
+
+    U->>D: POST /books/add (JWT Token ile)
+    D->>D: Yetki Kontrolü (Token parse)
+    D->>A: Token Doğrulama Sorgusu
+    A-->>D: HTTP 200 (Geçerli Kullanıcı)
+    D->>B: İstek Yönlendirme (Forwarding)
+    B-->>D: HTTP 201 Created (JSON)
+    D-->>U: Başarılı Yanıt
