@@ -41,10 +41,10 @@ python main.py
 
 Bu projede:
 
-* ✔ Sistem çökmesini önlemek
-* ✔ Yüksek ölçeklenebilirlik sağlamak
-* ✔ Güvenli erişim kontrolü oluşturmak
-* ✔ Servis bağımsızlığını sağlamak
+*  Sistem çökmesini önlemek
+*  Yüksek ölçeklenebilirlik sağlamak
+*  Güvenli erişim kontrolü oluşturmak
+*  Servis bağımsızlığını sağlamak
 
 hedeflenmiştir.
 
@@ -54,15 +54,15 @@ hedeflenmiştir.
 
 ### Monolitik Sistem Sorunları
 
-* Tek hata tüm sistemi etkiler ❌
-* Güncelleme maliyetlidir ❌
-* Ölçekleme sınırlıdır ❌
+* Tek hata tüm sistemi etkiler 
+* Güncelleme maliyetlidir 
+* Ölçekleme sınırlıdır
 
 ### Mikroservis Çözümü
 
-* Servisler ayrıştırıldı ✔
-* API Gateway eklendi ✔
-* Sistem modüler hale getirildi ✔
+* Servisler ayrıştırıldı 
+* API Gateway eklendi
+* Sistem modüler hale getirildi 
 
 ---
 
